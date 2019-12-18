@@ -1,15 +1,18 @@
 #include "wifi.h"
+#include "logger/logger.h"
 #include <WiFiManager.h>
 
-WiFiManager wifiManager;
+static WiFiManager wifiManager;
+static Logger l = Logger("WiFi");
 
 void setUpWifi()
 {
     wifiManager.autoConnect("EquipoLuces");
-    Serial.println("WiFi connected");
+    l << "Connected";
 }
 
 void resetWifi()
 {
     wifiManager.resetSettings();
+    l << "Reset";
 }

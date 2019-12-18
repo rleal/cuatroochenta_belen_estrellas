@@ -1,26 +1,22 @@
 #include "mqtt.h"
+#include "logger/logger.h"
 #include <PubSubClient.h>
 #include <ESP8266WiFi.h>
 
-WiFiClient espClient;
-PubSubClient client(espClient);
+static WiFiClient espClient;
+static PubSubClient client(espClient);
+static Logger l = Logger("MQTT");
 
 const char *MQTT_SERVER_IP = "34.226.229.35";
 const int MQTT_SERVER_PORT = 1883;
 
-bool reconnecting = false;
+static bool reconnecting = false;
 
 void callback(char *topic, byte *payload, unsigned int length)
 {
-    Serial.print("Message arrived [");
-    Serial.print(topic);
-    Serial.print("] ");
-    for (int i = 0; i < length; i++)
-    {
-        Serial.print((char)payload[i]);
-    }
-    Serial.println();
+    l << "Message from topic " << topic << " with message " << (char *)payload;
 
+    // TODO handler
     // Switch on the LED if an 1 was received as first character
     if ((char)payload[0] == '1')
     {
@@ -38,20 +34,24 @@ void setUpMQTTClient()
 {
     client.setServer(MQTT_SERVER_IP, MQTT_SERVER_PORT);
     client.setCallback(callback);
+    l << "Client connected to " << MQTT_SERVER_IP << ":" << MQTT_SERVER_PORT;
 }
 
 void reconnect()
 {
     while (!client.connected())
     {
-        Serial.print("Attempting MQTT connection...");
+        l << "Attempting MQTT connection...";
+
         String clientId = "ESP8266agdflkjadsy";
         clientId += String(random(0xffff), HEX);
 
         if (client.connect(clientId.c_str()))
         {
             reconnecting = false;
-            Serial.println("MQTT client connected");
+            l << "Client connected";
+
+            // TODO mock
             // Once connected, publish an announcement...
             client.publish("outTopic", "hello world");
             // ... and resubscribe
@@ -59,10 +59,7 @@ void reconnect()
         }
         else
         {
-            Serial.print("failed, rc=");
-            Serial.print(client.state());
-            Serial.println(" try again in 5 seconds");
-            // Wait 5 seconds before retrying
+            l << "Connection failed with status " << client.state() << ". Try again in 5 seconds";
             delay(5000);
         }
     }

@@ -1,31 +1,26 @@
-#include <Arduino.h>
+#include "arduino/arduino.h"
 #include "wifi/wifi.h"
 #include "mqtt/mqtt.h"
 
 void setup()
 {
-  Serial.begin(115200);
-
-  pinMode(A0, INPUT);
-  pinMode(D0, OUTPUT);
-  pinMode(D1, INPUT);
-
-  setUpWifi();
-  setUpMQTTClient();
+    setUpArduino();
+    setUpWifi();
+    setUpMQTTClient();
 }
 
 void loop()
 {
-  reconnectMQTTClientIfRequired();
-  int sensorLuz = analogRead(A0);
+    reconnectMQTTClientIfRequired();
+    //int sensorLuz = analogRead(A0);
 
-  if (sensorLuz < 250)
-  {
-    digitalWrite(D0, HIGH);
-  }
-  else
-  {
-    digitalWrite(D0, LOW);
-  }
-  delay(1000);
+    //if (sensorLuz < 250)
+    //{
+    //  digitalWrite(D0, HIGH);
+    //}
+    //else
+    //{
+    //  digitalWrite(D0, LOW);
+    //}
+    delay(1000);
 }
