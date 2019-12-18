@@ -1,5 +1,6 @@
 #include "mqtt.h"
 #include "logger/logger.h"
+#include "handler/handler.h"
 #include <PubSubClient.h>
 #include <ESP8266WiFi.h>
 
@@ -12,22 +13,10 @@ const int MQTT_SERVER_PORT = 1883;
 
 static bool reconnecting = false;
 
-void callback(char *topic, byte *payload, unsigned int length)
+void callback(char *topic, uint8_t *payload, unsigned int length)
 {
     l << "Message from topic " << topic << " with message " << (char *)payload;
-
-    // TODO handler
-    // Switch on the LED if an 1 was received as first character
-    if ((char)payload[0] == '1')
-    {
-        //digitalWrite(BUILTIN_LED, LOW);   // Turn the LED on (Note that LOW is the voltage level
-        // but actually the LED is on; this is because
-        // it is active low on the ESP-01)
-    }
-    else
-    {
-        //digitalWrite(BUILTIN_LED, HIGH);  // Turn the LED off by making the voltage HIGH
-    }
+    handle(topic, payload, length);
 }
 
 void setUpMQTTClient()
@@ -37,25 +26,40 @@ void setUpMQTTClient()
     l << "Client connected to " << MQTT_SERVER_IP << ":" << MQTT_SERVER_PORT;
 }
 
-void reconnect()
+boolean tryToConnect()
+{
+    l << "Attempting MQTT connection...";
+    String clientId = "ESP8266agdflkjadsy";
+    clientId += String(random(0xffff), HEX);
+    return client.connect(clientId.c_str());
+}
+
+void subscribe(const char *topic)
+{
+    if (client.subscribe(topic))
+    {
+        l << "Subscribed for " << topic;
+    }
+    else
+    {
+        l << "Subscription failed for " << topic;
+    }
+}
+
+void onConnect()
+{
+    reconnecting = false;
+    l << "Client connected";
+    eachKey(subscribe);
+}
+
+void reconnectingLoop()
 {
     while (!client.connected())
     {
-        l << "Attempting MQTT connection...";
-
-        String clientId = "ESP8266agdflkjadsy";
-        clientId += String(random(0xffff), HEX);
-
-        if (client.connect(clientId.c_str()))
+        if (tryToConnect())
         {
-            reconnecting = false;
-            l << "Client connected";
-
-            // TODO mock
-            // Once connected, publish an announcement...
-            client.publish("outTopic", "hello world");
-            // ... and resubscribe
-            client.subscribe("inTopic");
+            onConnect();
         }
         else
         {
@@ -70,6 +74,6 @@ void reconnectMQTTClientIfRequired()
     if (!client.connected() && !reconnecting)
     {
         reconnecting = true;
-        reconnect();
+        reconnectingLoop();
     }
 }
