@@ -20,7 +20,7 @@ static Logger l = Logger("MQTT");
 const char *MQTT_SERVER_IP = "34.226.229.35";
 const int MQTT_SERVER_PORT = 1883;
 
-static bool reconnecting = false;
+static long lastReconnectAttempt = 0;
 
 /**
  * Método para procesar mensajes entrantes. 
@@ -67,34 +67,34 @@ void subscribe(const char *topic)
  */
 void onConnect()
 {
-    reconnecting = false;
-    l << "Client connected";
+    lastReconnectAttempt = 0;
     eachKey(subscribe);
+    l << "Client connected";
 }
 
 /**
  * Bucle de reconexión. 
- * Ahora mismo es bloqueante hacia el bucle principal.
+ * No bloqueante.
  */
-void reconnectingLoop()
+void reconnectionLoop()
 {
-    while (!client.connected())
+    if (!client.connected())
     {
-        if (tryToConnect())
+        long now = millis();
+        if (now - lastReconnectAttempt > 5000)
         {
-            onConnect();
-        }
-        else
-        {
-            l << "Connection failed with status " << client.state() << ". Try again in 5 seconds";
-            flushLog();
-            delay(5000);
+            lastReconnectAttempt = now;
+            l << "Trying to connect. Current state code is " << client.state();
+            if (tryToConnect())
+            {
+                onConnect();
+            }
         }
     }
 }
 
 /**
- * Método declarados en el header.
+ * Método declarado en el header.
  */
 void setUpMQTTClient()
 {
@@ -108,11 +108,8 @@ void setUpMQTTClient()
  */
 void MQTTClientLoop()
 {
-    if (client.loop() || reconnecting)
+    if (!client.loop())
     {
-        return;
+        reconnectionLoop();
     }
-
-    reconnecting = true;
-    reconnectingLoop();
 }

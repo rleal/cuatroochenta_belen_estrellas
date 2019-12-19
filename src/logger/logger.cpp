@@ -3,7 +3,7 @@
 static stringstream str;
 
 /**
- * Implementación del `flushLog`declarado en el header. 
+ * Implementación del `flushLog` declarado en el header. 
  * Actualmente lo envía por la salida de Arduino.
  */
 void flushLog()
@@ -19,9 +19,8 @@ void flushLog()
  */
 ostream &operator<<(ostream &os, const Logger &l)
 {
-    os << "\n"
-       << l.subject << ": ";
-    return os;
+    return os << "\n"
+              << l.subject << ": ";
 }
 
 /**

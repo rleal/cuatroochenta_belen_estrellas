@@ -18,8 +18,8 @@
  * Configuración inicial.
  * 
  * Ahora mismo el programa no continúa hasta que se
- * ha resuelto la conexión a la red. Cambiarlo 
- * si el sistema puede realizar acciones sin conexión.
+ * ha resuelto la conexión de red. Cambiarlo 
+ * si el sistema puede empezar a realizar acciones sin conexión.
  */
 void setup()
 {
@@ -30,10 +30,6 @@ void setup()
 
 /**
  * Bucle principal.
- * 
- * Ahora mismo si la conexión con el servidor falla, 
- * el bucle de reconexión bloquea al principal. 
- * Cambiarlo si se necesita autonomía de los eventos MQTT. 
  */
 void loop()
 {
