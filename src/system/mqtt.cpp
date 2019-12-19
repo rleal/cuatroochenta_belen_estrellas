@@ -4,8 +4,8 @@
  */
 
 #include "mqtt.h"
-#include "system/logger/logger.h"
-#include "system/handler/handler.h"
+#include "system/logger.h"
+#include "system/handler.h"
 #include <PubSubClient.h>
 #include <ESP8266WiFi.h>
 
