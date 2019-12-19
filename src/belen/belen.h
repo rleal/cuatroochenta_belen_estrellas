@@ -1,22 +1,22 @@
 /*
- * Módulo para declarar la lógica 
+ * Módulo para declarar la lógica del Belen
  * relacionada con la placa.
  */
 
-#ifndef ARDUINO_H
-#define ARDUINO_H
+#ifndef BELEN_H
+#define BELEN_H
 
 #include <Arduino.h>
 
 /**
  * Configuración inicial
  */
-void setUpArduino();
+void setUpBelen();
 
 /**
  * Método que ha de ser llamado de vez en cuando para
  * permitir acciones de la placa.
  */
-void arduinoLoop();
+void belenLoop();
 
 #endif

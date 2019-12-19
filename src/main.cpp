@@ -2,17 +2,17 @@
  * Módulo principal.
  *
  * Coordina el resto de módulos del proyecto:
- ** - Arduino. Para la lógica de la placa.
- ** - Logger. Para la centralización de logs.
- ** - WiFi. Para la conexión de red.
- ** - MQTT. Para la conexión del cliente MQTT.
- ** - Handler. Utilidad para el registro de eventos.
+ ** - Belen. Para la lógica del Belen.
+ ** - System/Logger. Para la centralización de logs.
+ ** - System/WiFi. Para la conexión de red.
+ ** - System/MQTT. Para la conexión del cliente MQTT.
+ ** - System/Handler. Utilidad para el registro de eventos.
  */
 
-#include "arduino/arduino.h"
-#include "logger/logger.h"
-#include "wifi/wifi.h"
-#include "mqtt/mqtt.h"
+#include "belen/belen.h"
+#include "system/logger/logger.h"
+#include "system/wifi/wifi.h"
+#include "system/mqtt/mqtt.h"
 
 /**
  * Configuración inicial.
@@ -23,7 +23,7 @@
  */
 void setup()
 {
-    setUpArduino();
+    setUpBelen();
     setUpWifi();
     setUpMQTTClient();
 }
@@ -34,7 +34,7 @@ void setup()
 void loop()
 {
     MQTTClientLoop();
-    arduinoLoop();
+    belenLoop();
     flushLog();
     delay(1000);
 }

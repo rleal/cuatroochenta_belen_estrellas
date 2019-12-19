@@ -1,8 +1,8 @@
-#include "arduino.h"
-#include "handler/handler.h"
-#include "logger/logger.h"
+#include "belen.h"
+#include "system/handler/handler.h"
+#include "system/logger/logger.h"
 
-static Logger l = Logger("ARDUINO");
+static Logger l = Logger("BELEN");
 
 /**
  * Constantes para los eventos a los que se suscribe
@@ -21,7 +21,7 @@ void onHelloWorld(uint8_t *payload, unsigned int length)
 /**
  * Método declarado en el header.
  */
-void setUpArduino()
+void setUpBelen()
 {
     // Configuración de comunicación
     Serial.begin(115200);
@@ -34,13 +34,13 @@ void setUpArduino()
     // Registro de eventos
     addHandler(HELLO_WORLD_TOPIC, onHelloWorld);
 
-    l << "Arduino ready";
+    l << "Belen ready";
 }
 
 /**
  * Método declarado en el header.
  */
-void arduinoLoop()
+void belenLoop()
 {
     // EJEMPLO
     //int sensorLuz = analogRead(A0);
