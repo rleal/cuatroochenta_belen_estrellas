@@ -18,5 +18,6 @@ const char *helloWorldEvent()
 void onHelloWorld(uint8_t *payload, unsigned int length)
 {
     l << "Hello world with data " << (char *)payload;
-    l << "Hello world happend " << incrementAndGetHelloWorld() << " times";
+    int newState = incrementAndGetHelloWorld();
+    l << "Hello world happend " << newState << " times";
 }

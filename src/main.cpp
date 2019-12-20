@@ -1,14 +1,5 @@
 /*
  * Módulo principal.
- * 
- * Para el desarrollo habitual de funcionalidades del belén
- * tan solo hay que definir los loops, eventos y estado necesarios.
- * 
- * Ejemplos:
- ** - Belen/Event/helloWorldEvent: evento de ejemplo.
- ** - Belen/Loop/helloWorldLoop: loop de ejemplo.
- ** - Belen/State/incrementAndGetHelloWorld: ejemplo de estado.
- ** - Belen/base: configuración y uso de los ejemplos anteriores.
  *
  * 
  * Índice de módulos del proyecto:
